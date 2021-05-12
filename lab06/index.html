@@ -2,9 +2,47 @@
 	<head>
 		<meta charset="utf-8">
 		<script src="https://d3js.org/d3.v3.min.js"></script>
+
+		<style type="text/css">
+			svg {
+				font: 10px sans-serif;
+				shape-rendering: crispEdges
+			}
+
+			.axis path,
+			.axis line {
+				fill: none;
+				stroke: #000;
+			}
+
+			path.domain {
+				stroke: none;
+			}
+
+			.y .tick line {
+				stroke: #ddd;
+			}
+		</style>
+
+
+
 	</head>
 	<body>
 		<script>
+
+			var margin = {top: 20, right: 60, bottom: 35, left: 30};
+			var width = 2000 - margin.left - margin.right;
+			var height = 600 - margin.top - margin.bottom;
+
+			var svg = d3.select("body")
+						.append("svg")
+						.attr("width", width + margin.left + margin.right)
+						.attr("height", height + margin.top + margin.bottom)
+						.append("g")
+						.attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+			var colors = ["#b33040", "#d25c4d", "#f2b447", "#d9d574", "#0968f1"];
+
 
 			var datas = [];
 
@@ -37,7 +75,35 @@
 				});
 
 				dataset = d3.layout.stack()(dataset);
-				console.log(dataset[0]);
+
+				var x = d3.scale.ordinal()
+						.domain(dataset[0].map(function(d){return d.x;}))
+						.rangeRoundBands([10, width - 10], 0.02);
+
+				var y = d3.scale.linear()
+						.domain([0, d3.max(dataset, function(d){return d3.max(d, function(d){return d.y0 + d.y})})])
+						.range([height, 0]);
+
+
+
+				var groups = svg.selectAll("g.cost")
+							.data(dataset)
+							.enter().append(g)
+							.attr("class", "cost")
+							.style("fill", function(d, i){return colors[i];});
+
+				var rect = groups.selectAll("rect")
+							.data(function(d){return d;})
+							.enter()
+							.append("rect")
+							.attr("x", function(d){return x(d.x);})
+							.attr("y", function(d){return y(d.y0 + d.y);})
+							.attr("height", function(d){return y(d.y0) - y(d.y0 - d.y)})
+
+
+				console.log(dataset);
+
+
 
 
 
