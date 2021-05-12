@@ -1,14 +1,55 @@
 <html>
 	<head>
 		<meta charset="utf-8">
-		<script src="https://d3js.org/d3.v4.js"></script>
+		<script src="https://d3js.org/d3.v3.min.js"></script>
 	</head>
 	<body>
 		<script>
 
-			var dataset = d3.csv("data.csv", function(data) {
-				console.log(data);
+			var datas = [];
+
+			// var text = d3.text("data.csv", function(data) {
+			// 				var parseCSV  = d3.csv.parseRows(data);
+							
+			// 				parseCSV.forEach(function(item, index){
+			// 				if (index != 0) {
+			// 					datas.push({index: index - 1, Ch: item[0], En:item[1], Fr: item[2], Ge: item[3], Ja: item[4], type1: item[5], type2: item[6]});
+			// 				}
+			// 				});
+
+			// 			});
+		
+
+			var text = d3.text("data.csv", function(data){
+				var parseCSV = d3.csv.parseRows(data);
+				parseCSV.forEach(function(item, index){
+					if (index != 0) {
+						datas.push({index: index - 1, Ch: item[0], En: item[1], Fr: item[2], Ge: item[3], Ja:item[4]});
+					}
+				});
+				
+
+				var dataset = ["Ch", "En", "Fr", "Ge", "Ja"].map(function(type){
+					// datas.map(function(d) {
+					// return {x: d.index, y: +d[type]};
+					// });
+					return datas.map(function(d){return {x: d.index, y: +d[type]}});
+				});
+
+				dataset = d3.layout.stack()(dataset);
+				console.log(dataset[0]);
+
+
+
+
+				// datas.map(function(d){});				
+				// datas.map()
+
 			});
+
+
+	
+
 		</script>
 
 	</body>
