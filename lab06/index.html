@@ -22,6 +22,10 @@
 			.y .tick line {
 				stroke: #ddd;
 			}
+
+			.x tick line {
+				stroke: #ddd;
+			}
 		</style>
 
 
@@ -85,10 +89,32 @@
 						.range([height, 0]);
 
 
+				var yAxis = d3.svg.axis()
+							.scale(y)
+							.orient("left")
+							.ticks(5)
+							.tickSize(-width,0, 0)
+							.tickFormat(function(d){return d;});
+
+				
+
+				svg.append("g")
+					.attr("class", "y axis")
+					.call(yAxis);
+
+				var xAxis = d3.svg.axis()
+							.scale(x)
+							.orient("bottom");
+
+				svg.append("g")
+					.attr("class", "x axis")
+					.attr("transform", "translate(0," +  height + ")")
+					.call(xAxis);
+
 
 				var groups = svg.selectAll("g.cost")
 							.data(dataset)
-							.enter().append(g)
+							.enter().append("g")
 							.attr("class", "cost")
 							.style("fill", function(d, i){return colors[i];});
 
@@ -98,7 +124,8 @@
 							.append("rect")
 							.attr("x", function(d){return x(d.x);})
 							.attr("y", function(d){return y(d.y0 + d.y);})
-							.attr("height", function(d){return y(d.y0) - y(d.y0 - d.y)})
+							.attr("height", function(d){return y(d.y0) - y(d.y0 + d.y)})
+							.attr("width", x.rangeBand());
 
 
 				console.log(dataset);
