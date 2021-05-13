@@ -66,7 +66,7 @@
 				var parseCSV = d3.csv.parseRows(data);
 				parseCSV.forEach(function(item, index){
 					if (index != 0) {
-						datas.push({index: index - 1, Ch: item[0], En: item[1], Fr: item[2], Ge: item[3], Ja:item[4]});
+						datas.push({index: index - 1, Ch: item[0], En: item[1], Fr: item[2], Ge: item[3], Ja:item[4], type1: item[5], type2: item[6]});
 					}
 				});
 				
@@ -125,7 +125,20 @@
 							.attr("x", function(d){return x(d.x);})
 							.attr("y", function(d){return y(d.y0 + d.y);})
 							.attr("height", function(d){return y(d.y0) - y(d.y0 + d.y)})
-							.attr("width", x.rangeBand());
+							.attr("width", x.rangeBand())
+							.on("mouseover", function(){tooltip.style("display", "block");})
+							.on("mouseout", function(){tooltip.style("display", "none");})
+							.on("mousemove", function(d){
+								var xPosition = d3.mouse(this)[0];
+								var yPosition = d3.mouse(this)[1];
+								tooltip.attr("transform", "translate(" + xPosition + "," + yPosition + ")");
+								tooltip.select("text").text("id: " + d.x + "\ntype1:" + datas[d.x].type1 + ";\n type2:" +  datas[d.x].type2);
+							});
+
+
+
+
+
 
 
 
@@ -156,6 +169,21 @@
 							
 						}
 					});
+
+
+
+
+
+				var tooltip = svg.append("g")
+					.attr("class", "tooltip")
+					.style("display", "none");
+
+				tooltip.append("text")
+					.attr("x", 15)
+					.attr("dy", "1.2em")
+					.style("text-anchor", "middle")
+					.attr("font-size", "12pt")
+					.attr("font-weight", "bold");
 
 				console.log(dataset);
 
