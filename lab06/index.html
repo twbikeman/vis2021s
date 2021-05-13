@@ -93,7 +93,7 @@
 							.scale(y)
 							.orient("left")
 							.ticks(5)
-							.tickSize(-width,0, 0)
+							.tickSize(-width)
 							.tickFormat(function(d){return d;});
 
 				
@@ -127,6 +127,35 @@
 							.attr("height", function(d){return y(d.y0) - y(d.y0 + d.y)})
 							.attr("width", x.rangeBand());
 
+
+
+				var legend = svg.selectAll(".legend")
+								.data(colors)
+								.enter().append("g")
+								.attr("class", "legend")
+								.attr("transform", function(d, i){return "translate(30," + i * 19 + ")";})
+				legend.append("rect")
+						.attr("x", width -18)
+						.attr("width", 18)
+						.attr("height", 18)
+						.style("fill", function(d, i){return colors.slice().reverse()[i];});
+
+
+				legend.append("text")
+					.attr("x", width + 5)
+					.attr("y", 9)
+					.attr("dy", ".35em")
+					.style("text-anchor", "start")
+					.text(function(d, i){
+						switch(i) {
+							case 0: return "日文";
+							case 1: return "德文";
+							case 2: return "法文";
+							case 3: return "英文";
+							case 4: return "國文";
+							
+						}
+					});
 
 				console.log(dataset);
 
